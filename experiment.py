@@ -15,12 +15,12 @@ import seaborn as sns
 import argparse
 
 
-plt.rc('legend', fontsize=24)
-plt.rc('axes', labelsize=20)
-plt.rc('xtick', labelsize=18)
-plt.rc('ytick', labelsize=18)
-plt.rc('axes', titlesize=20)
-plt.rc('figure', titlesize=24)
+plt.rc('legend', fontsize=30)
+plt.rc('axes', labelsize=24)
+plt.rc('xtick', labelsize=20)
+plt.rc('ytick', labelsize=20)
+plt.rc('axes', titlesize=24)
+plt.rc('figure', titlesize=30)
 
 plt.rcParams.update({
     'figure.constrained_layout.use': True,
@@ -279,9 +279,11 @@ def run_experiment(root_data, root_data_test, experiment_set):
         mean_auc = np.mean(roc_auc)
         sd_auc = np.std(roc_auc)
         sd_tpr = np.std([np.interp(np.linspace(0, 1, 100), fpr[i], tpr[i]) for i in range(REPEAT_EXPERIMENT)], axis=0)
-        tprs_upper = np.minimum(mean_tpr + 2*sd_tpr, 1)
-        tprs_lower = np.maximum(mean_tpr - 2*sd_tpr, 0)
-        plt.plot(mean_fpr, mean_tpr, color='b', label=f'Mean ROC AUC = {mean_auc:.2f} $\pm$ {sd_auc:.2f}')
+        interval = 1.96 * (sd_auc / np.sqrt(REPEAT_EXPERIMENT))
+        interval_tpr = 1.96 * (sd_tpr / np.sqrt(REPEAT_EXPERIMENT))
+        tprs_upper = np.minimum(mean_tpr + interval_tpr, 1)
+        tprs_lower = np.maximum(mean_tpr - interval_tpr, 0)
+        plt.plot(mean_fpr, mean_tpr, color='b', label=f'ROC AUC = {mean_auc:.2f} $\pm$ {interval:.2f}')
         plt.plot([0, 1], [0, 1], color='grey', linestyle='--')
         plt.fill_between(mean_fpr, tprs_lower, tprs_upper, color='grey', alpha=0.2)
         plt.xlabel('False Positive Rate')
@@ -308,11 +310,11 @@ def run_experiment(root_data, root_data_test, experiment_set):
         false_negatives = np.sum((y_pred < optimal_threshold.reshape(-1, 1)) & (y_true == 1), axis=1)
 
         # Calculate the mean and confidence interval 
-        cm[0, 0] = f'{np.mean(true_negatives):.2f} \n [ {np.mean(true_negatives) - 2*np.std(true_negatives):.2f}, {np.mean(true_negatives) + 2*np.std(true_negatives):.2f} ]'
-        cm[0, 1] = f'{np.mean(false_positives):.2f} \n [ {np.mean(false_positives) - 2*np.std(false_positives):.2f}, {np.mean(false_positives) + 2*np.std(false_positives):.2f} ]'
-        cm[1, 0] = f'{np.mean(false_negatives):.2f} \n [ {np.mean(false_negatives) - 2*np.std(false_negatives):.2f}, {np.mean(false_negatives) + 2*np.std(false_negatives):.2f} ]'
-        cm[1, 1] = f'{np.mean(true_positives):.2f} \n [ {np.mean(true_positives) - 2*np.std(true_positives):.2f}, {np.mean(true_positives) + 2*np.std(true_positives):.2f} ]'
-
+        cm[0, 0] = f'{np.mean(true_negatives):.2f} \n [ {np.mean(true_negatives) - 1.96*np.std(true_negatives)/np.sqrt(REPEAT_EXPERIMENT):.2f}, {np.mean(true_negatives) + 1.96*np.std(true_negatives)/np.sqrt(REPEAT_EXPERIMENT):.2f} ]'
+        cm[0, 1] = f'{np.mean(false_positives):.2f} \n [ {np.mean(false_positives) - 1.96*np.std(false_positives)/np.sqrt(REPEAT_EXPERIMENT):.2f}, {np.mean(false_positives) + 1.96*np.std(false_positives)/np.sqrt(REPEAT_EXPERIMENT):.2f} ]'
+        cm[1, 0] = f'{np.mean(false_negatives):.2f} \n [ {np.mean(false_negatives) - 1.96*np.std(false_negatives)/np.sqrt(REPEAT_EXPERIMENT):.2f}, {np.mean(false_negatives) + 1.96*np.std(false_negatives)/np.sqrt(REPEAT_EXPERIMENT):.2f} ]'
+        cm[1, 1] = f'{np.mean(true_positives):.2f} \n [ {np.mean(true_positives) - 1.96*np.std(true_positives)/np.sqrt(REPEAT_EXPERIMENT):.2f}, {np.mean(true_positives) + 1.96*np.std(true_positives)/np.sqrt(REPEAT_EXPERIMENT):.2f} ]'
+        
         cm_numbers = np.array([[np.mean(true_negatives), np.mean(false_positives)], [np.mean(false_negatives), np.mean(true_positives)]])
 
         # Create a confusion matrix plot
@@ -344,7 +346,6 @@ def create_plots(root_data_test, experiment_set):
         cm = results['cm']
 
         # Make a plot which shows the confidence interval of the ROC curve
-
         plt.figure(figsize=(8, 6))
         # The tpr, fpr and thresholds are different sizes, so we need to interpolate them to the same size
         mean_tpr = np.mean([np.interp(np.linspace(0, 1, 100), fpr[i], tpr[i]) for i in range(REPEAT_EXPERIMENT)], axis=0)
@@ -352,9 +353,11 @@ def create_plots(root_data_test, experiment_set):
         mean_auc = np.mean(roc_auc)
         sd_auc = np.std(roc_auc)
         sd_tpr = np.std([np.interp(np.linspace(0, 1, 100), fpr[i], tpr[i]) for i in range(REPEAT_EXPERIMENT)], axis=0)
-        tprs_upper = np.minimum(mean_tpr + 2*sd_tpr, 1)
-        tprs_lower = np.maximum(mean_tpr - 2*sd_tpr, 0)
-        plt.plot(mean_fpr, mean_tpr, color='b', label=f'Mean ROC AUC = {mean_auc:.2f} $\pm$ {sd_auc:.2f}')
+        interval = 1.96 * (sd_auc / np.sqrt(REPEAT_EXPERIMENT))
+        interval_tpr = 1.96 * (sd_tpr / np.sqrt(REPEAT_EXPERIMENT))
+        tprs_upper = np.minimum(mean_tpr + interval_tpr, 1)
+        tprs_lower = np.maximum(mean_tpr - interval_tpr, 0)
+        plt.plot(mean_fpr, mean_tpr, color='b', label=f'ROC AUC = {mean_auc:.2f} $\pm$ {interval:.2f}')
         plt.plot([0, 1], [0, 1], color='grey', linestyle='--')
         plt.fill_between(mean_fpr, tprs_lower, tprs_upper, color='grey', alpha=0.2)
         plt.xlabel('False Positive Rate')
@@ -381,11 +384,11 @@ def create_plots(root_data_test, experiment_set):
         false_negatives = np.sum((y_pred < optimal_threshold.reshape(-1, 1)) & (y_true == 1), axis=1)
 
         # Calculate the mean and confidence interval
-        cm[0, 0] = f'{np.mean(true_negatives):.2f} \n [ {np.mean(true_negatives) - 2*np.std(true_negatives):.2f}, {np.mean(true_negatives) + 2*np.std(true_negatives):.2f} ]'
-        cm[0, 1] = f'{np.mean(false_positives):.2f} \n [ {np.mean(false_positives) - 2*np.std(false_positives):.2f}, {np.mean(false_positives) + 2*np.std(false_positives):.2f} ]'
-        cm[1, 0] = f'{np.mean(false_negatives):.2f} \n [ {np.mean(false_negatives) - 2*np.std(false_negatives):.2f}, {np.mean(false_negatives) + 2*np.std(false_negatives):.2f} ]'
-        cm[1, 1] = f'{np.mean(true_positives):.2f} \n [ {np.mean(true_positives) - 2*np.std(true_positives):.2f}, {np.mean(true_positives) + 2*np.std(true_positives):.2f} ]'
-
+        cm[0, 0] = f'{np.mean(true_negatives):.2f} \n [ {np.mean(true_negatives) - 1.96*np.std(true_negatives)/np.sqrt(REPEAT_EXPERIMENT):.2f}, {np.mean(true_negatives) + 1.96*np.std(true_negatives)/np.sqrt(REPEAT_EXPERIMENT):.2f} ]'
+        cm[0, 1] = f'{np.mean(false_positives):.2f} \n [ {np.mean(false_positives) - 1.96*np.std(false_positives)/np.sqrt(REPEAT_EXPERIMENT):.2f}, {np.mean(false_positives) + 1.96*np.std(false_positives)/np.sqrt(REPEAT_EXPERIMENT):.2f} ]'
+        cm[1, 0] = f'{np.mean(false_negatives):.2f} \n [ {np.mean(false_negatives) - 1.96*np.std(false_negatives)/np.sqrt(REPEAT_EXPERIMENT):.2f}, {np.mean(false_negatives) + 1.96*np.std(false_negatives)/np.sqrt(REPEAT_EXPERIMENT):.2f} ]'
+        cm[1, 1] = f'{np.mean(true_positives):.2f} \n [ {np.mean(true_positives) - 1.96*np.std(true_positives)/np.sqrt(REPEAT_EXPERIMENT):.2f}, {np.mean(true_positives) + 1.96*np.std(true_positives)/np.sqrt(REPEAT_EXPERIMENT):.2f} ]'
+        
         cm_numbers = np.array([[np.mean(true_negatives), np.mean(false_positives)], [np.mean(false_negatives), np.mean(true_positives)]])
 
         # Create a confusion matrix plot
