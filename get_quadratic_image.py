@@ -31,5 +31,5 @@ def turn_all_photos_to_quadratic_images(path_out: str, path_in: str = 'DTU_img_u
 
 
 if __name__ == '__main__':
-    turn_all_photos_to_quadratic_images('quadratic_images/DTU')
+    turn_all_photos_to_quadratic_images(path_out='images_attack_model/DTU_gen_vs_AAU_v1/aau', path_in='images_attack_model/DTU_gen_vs_AAU_v1/aau')
 

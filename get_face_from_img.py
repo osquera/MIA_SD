@@ -106,14 +106,14 @@ def get_face_from_img(img_folder_path: str, img_path_out:str):
                 right = right - left
                 left = 0
             if right > w:
-                left = left - (right - w)
-                right = w
+                left = 0
+                right = 512
+            if bottom > h:
+                top = 0
+                bottom = 512
             if top < 0:
                 bottom = bottom - top
                 top = 0
-            if bottom > h:
-                top = top - (bottom - h)
-                bottom = h
 
             image = img[top:bottom, left:right]
 
@@ -127,10 +127,10 @@ if __name__ == '__main__':
     # img_folder_path = 'C:\\DTU - KID\\6. Semester\\MIA_SD\\DTU_img_upscaled3\\restored_imgs'
     # img_path_out = 'C:\\DTU - KID\\6. Semester\\MIA_SD\\DTU_img_upscaled_centered_eyes'
     
-    img_folder_path = 'C:\\DTU - KID\\6. Semester\\MIA_SD\\test'
-    img_path_out = 'C:\\DTU - KID\\6. Semester\\MIA_SD\\test_out'
+    img_folder_path = 'C:\\DTU - KID\\6. Semester\\MIA_SD\\AAU_img_upscaled\\restored_imgs'
+    img_path_out = 'C:\\DTU - KID\\6. Semester\\MIA_SD\\AAU_img_upscaled_centered_eyes'
 
-    #get_centered_face_from_img(img_folder_path, img_path_out)
+    # get_centered_face_from_img(img_folder_path, img_path_out)
 
     get_face_from_img(img_folder_path, img_path_out)
    
