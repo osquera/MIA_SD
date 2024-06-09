@@ -169,5 +169,11 @@ cython_debug/
 *.jpg
 *.jpeg
 
+# Models
+*.h5
+*.hdf5
+*.pth
+*.pt
+
 ### Project Specific ###
 GFPGAN/
