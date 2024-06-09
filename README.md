@@ -24,5 +24,20 @@
 
 ## Usage
 
-- Run the main script using the following command:
+- Run the main script /experiment.py using the following commands:
+    ```shell
+    python experiment.py --run_all
+    ```
+    from the repo source to run all experiments. Note however that the images used are not published and would,
+    therefore have to be added for the script to run. An example of the Attack Model training is shown in /attack_model.ipynb.
+    
+    If the experiments ran, they can be visualized with
+
+    ```shell
+    python experiment.py --plot --clip
+    ```
+
+    Note that this repo does not include the finetuning of the target model.
+
+
 
