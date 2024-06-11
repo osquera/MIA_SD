@@ -63,3 +63,15 @@ In our experiments, 100 seeds where used to generate 25 each resulting in a tota
    ```shell
    python3 inference.py
    ```
+
+## Adding watermarks to training data
+
+1. Open up `watermark/add_logo_watermark.py`
+   1. Set `IN_DIR` to the path for the images for which to add the watermark
+   2. Set `OUT_DIR` to the path for where to store the watermarked images
+   3. Set `hidden` to `true` to add hidden watermarks and `false` to add visible watermarks
+2. Run the script:
+
+   ```shell
+   python3 watermark/add_logo_watermark.py
+   ```
