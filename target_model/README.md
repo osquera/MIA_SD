@@ -49,3 +49,17 @@ In our experiments fine-tuning was done on an NVIDIA A100 GPU. Fine-tuning will 
    ```shell
    bash fine_tune.sh
    ```
+
+## Running inference
+
+In our experiments, 100 seeds where used to generate 25 each resulting in a total of 2,500 images.
+
+1. Open up `inference.py`
+   1. Set `model_path` to the model that should be used for inference
+   2. Set `out_path` to the path for where to store the generated images
+   3. Set `prompt` to the inference prompt (eg. "a dtu headhsot")
+2. Run the `inference.py` script:
+
+   ```shell
+   python3 inference.py
+   ```
