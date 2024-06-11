@@ -37,7 +37,5 @@
     python experiment.py --plot --clip
     ```
 
-    Note that this repo does not include the finetuning of the target model.
-
 
 
