@@ -23,6 +23,19 @@
    pip3 install git+https://github.com/huggingface/diffusers
    ```
 
+## Preparing the dataset
+
+When fine-tuning in a classifier free setting, we need a dataset with image text pairs (where the text describes the contents of the image). In our experiments a BLIP model (https://huggingface.co/Salesforce/blip-image-captioning-large) was used to auto-label our images. The following steps will create a `metadata.jsonl` compatible with the Hugging Face Diffusers framework (https://huggingface.co/docs/diffusers/index)
+
+1. Open up `auto_label.py`
+   1. Set `IMG_DIR` to the path for the images to label
+   2. Set `text_conditioning` to a desired prefix for the images, eg. "a dtu headshot of a"
+2. Run the `auto_label.py` script:
+
+   ```shell
+   python3 auto_label.py
+   ```
+
 ## Fine-tuning
 
 In our experiments fine-tuning was done on an NVIDIA A100 GPU. Fine-tuning will be done on Stable Diffusion 1.5 (https://huggingface.co/runwayml/stable-diffusion-v1-5). `train_text_to_image.py` is taken from Hugging Faces Diffusers: https://github.com/huggingface/diffusers/blob/main/examples/text_to_image/train_text_to_image.py
