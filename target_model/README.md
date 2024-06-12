@@ -1,4 +1,4 @@
-# Fine-tuning target model
+# Fine-tuning the target model
 
 ## Requirements
 
