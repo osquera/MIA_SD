@@ -1,4 +1,4 @@
-# Model Inference Attack on Stable Diffusion
+# Membership Inference Attack on Stable Diffusion
 
 ## Requirements
 
